@@ -4,12 +4,14 @@ using System.Collections;
 public class MouseController : MonoBehaviour
 {
 	public float forceFactor = 50;
-	public float forceY;
-	public Vector3 forceVector;
-	public Vector3 mousePosition;
-	public GameObject flightWheel;
-	public Rigidbody flightWheelBody;
-	public Camera cam;
+	private float forceY;
+	private Vector3 forceVector;
+	private Vector3 mousePosition;
+	private GameObject flightWheel;
+	public GameObject forceArrowPrefab;
+	private GameObject forceArrow;
+	private Rigidbody flightWheelBody;
+	private Camera cam;
 
 	void Start ()
 	{
@@ -22,9 +24,13 @@ public class MouseController : MonoBehaviour
 	{
 		if (Input.GetMouseButtonDown (0)) {
 			forceVector = ThrowVectorXZ (Input.mousePosition);
+			forceArrow = (GameObject)Instantiate (forceArrowPrefab, flightWheel.transform.position, Quaternion.LookRotation(Vector3.up, Vector3.up));
 		} else if (Input.GetMouseButton (0) && forceVector.magnitude > 0) {
-			forceY = ThrowVectorY (Input.mousePosition, forceVector);
+			forceY = ThrowVectorY (Input.mousePosition, flightWheel.transform.position + forceVector);
+			forceArrow.transform.localScale = new Vector3 (1, 1, forceVector.magnitude);
+			forceArrow.transform.LookAt(flightWheel.transform.position + Vector3.up * forceY + forceVector);
 		} else if (Input.GetMouseButtonUp (0) && forceVector.magnitude > 0) {
+			Destroy (forceArrow);
 			flightWheelBody.AddForce ((forceVector + Vector3.up * forceY) * forceFactor);
 			print ("Force of " + forceVector.magnitude + " added!");
 		}
