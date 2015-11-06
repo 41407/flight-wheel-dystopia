@@ -22,7 +22,8 @@ public class MouseController : MonoBehaviour
 		if (Input.GetMouseButton (0)) {
 			RaycastHit hit;
 			float distanceToGround = 0;
-			Physics.Raycast (cam.ScreenToWorldPoint (Input.mousePosition), cam.transform.forward, out hit);
+			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+			Physics.Raycast (ray, out hit);
 			print (hit.point);
 			forceVector = hit.point - flightWheel.transform.position;
 		} else if (Input.GetMouseButtonUp (0) && forceVector.magnitude > 0) {
