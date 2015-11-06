@@ -21,26 +21,29 @@ public class MouseController : MonoBehaviour
 	void Update ()
 	{
 		if (Input.GetMouseButtonDown (0)) {
-			RaycastHit hit;
-			float distanceToGround = 0;
-			Ray ray = cam.ScreenPointToRay (Input.mousePosition);
-			Physics.Raycast (ray, out hit);
-			//print (hit.point);
-			forceVector = hit.point - flightWheel.transform.position;
+			forceVector = ThrowVectorXZ (Input.mousePosition);
 		} else if (Input.GetMouseButton (0) && forceVector.magnitude > 0) {
-			forceY = GetWorldPositionOnPlane (Input.mousePosition, forceVector).y;
+			forceY = ThrowVectorY (Input.mousePosition, forceVector);
 		} else if (Input.GetMouseButtonUp (0) && forceVector.magnitude > 0) {
-			flightWheelBody.AddForce (forceVector * forceFactor + Vector3.up * forceY * forceFactor);
+			flightWheelBody.AddForce ((forceVector + Vector3.up * forceY) * forceFactor);
 			print ("Force of " + forceVector.magnitude + " added!");
 		}
 	}
+
+	Vector3 ThrowVectorXZ (Vector3 mousePosition)
+	{
+		RaycastHit hit;
+		Ray ray = cam.ScreenPointToRay (mousePosition);
+		Physics.Raycast (ray, out hit);
+		return hit.point - flightWheel.transform.position;
+	}
 	
-	public Vector3 GetWorldPositionOnPlane (Vector3 mousePosition, Vector3 position)
+	float ThrowVectorY (Vector3 mousePosition, Vector3 position)
 	{
 		Ray ray = cam.ScreenPointToRay (mousePosition);
 		Plane xy = new Plane (Vector3.forward, position);
 		float distance;
 		xy.Raycast (ray, out distance);
-		return ray.GetPoint (distance);
+		return ray.GetPoint (distance).y;
 	}
 }
