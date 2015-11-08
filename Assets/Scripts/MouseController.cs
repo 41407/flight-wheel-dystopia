@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MouseController : MonoBehaviour
 {
-	public float forceFactor = 50;
+	public float forceScale = 10;
 	private float forceY;
 	private Vector3 forceVector;
 	private Vector3 mousePosition;
@@ -31,7 +31,7 @@ public class MouseController : MonoBehaviour
 			forceArrow.transform.LookAt(flightWheel.transform.position + Vector3.up * forceY + forceVector);
 		} else if (Input.GetMouseButtonUp (0) && forceVector.magnitude > 0) {
 			Destroy (forceArrow);
-			flightWheelBody.AddForce ((forceVector + Vector3.up * forceY) * forceFactor);
+			flightWheelBody.AddForce ((forceVector + Vector3.up * forceY) * forceScale);
 			print ("Force of " + forceVector.magnitude + " added!");
 		}
 	}
