@@ -22,7 +22,7 @@ public class MouseController : MonoBehaviour
 
 	void Start ()
 	{
-		flightWheel = GameObject.Find ("Flight Wheel");
+		flightWheel = GameObject.FindGameObjectWithTag ("Flight Wheel");
 		flightWheelBody = flightWheel.GetComponent<Rigidbody> ();
 		cam = Camera.main;
 	}
