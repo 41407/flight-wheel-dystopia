@@ -5,6 +5,7 @@ public class FlightWheelController : MonoBehaviour
 {
 	private Rigidbody body;
 	private bool flying;
+	private bool resting = true;
 
 	void Awake ()
 	{
@@ -15,6 +16,12 @@ public class FlightWheelController : MonoBehaviour
 	{
 		if (flying) {
 			transform.rotation = Quaternion.LookRotation (body.velocity);
+		}
+		if (body.velocity.Equals (Vector3.zero) && !IsInvoking ()) {
+			Invoke ("SetStationary", 0.1f);
+		} else if (body.velocity.magnitude > 0) {
+			//CancelInvoke ();
+			resting = false;
 		}
 	}
 
@@ -31,5 +38,15 @@ public class FlightWheelController : MonoBehaviour
 	void OnCollisionEnter (Collision col)
 	{
 		flying = false;
+	}
+
+	void SetStationary ()
+	{
+		resting = true;
+	}
+
+	public bool AtRest ()
+	{
+		return resting;
 	}
 }

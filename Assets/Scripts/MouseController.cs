@@ -8,6 +8,7 @@ public class MouseController : MonoBehaviour
 	private Vector3 forceVector;
 	private Vector3 mousePosition;
 	private GameObject flightWheel;
+	private FlightWheelController fwc;
 	public GameObject forceArrowPrefab;
 	private GameObject forceArrow;
 	private Rigidbody flightWheelBody;
@@ -23,13 +24,15 @@ public class MouseController : MonoBehaviour
 	void Start ()
 	{
 		flightWheel = GameObject.FindGameObjectWithTag ("Flight Wheel");
+		fwc = flightWheel.GetComponent<FlightWheelController> ();
 		flightWheelBody = flightWheel.GetComponent<Rigidbody> ();
+		
 		cam = Camera.main;
 	}
 
 	void Update ()
 	{
-		if (phase == 0) {
+		if (phase == 0 && fwc.AtRest()) {
 			if (Input.GetMouseButtonDown (0)) {
 				forceVector = ThrowVectorXZ (Input.mousePosition);
 				forceArrow = (GameObject)Instantiate (forceArrowPrefab, flightWheel.transform.position, Quaternion.LookRotation (Vector3.up, Vector3.up));
